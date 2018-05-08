@@ -80,7 +80,7 @@ class PrepaidCard {
    * @param int $ownerId
    * @param int $cardId
    */
-  public function __construct($ownerId, $cardId) {
+  public function __construct(int $ownerId, int $cardId) {
     $this->cardId = $cardId;
     $this->ownerId = $ownerId;
     // Assumption: card is always inactive when a card object is created.
@@ -94,7 +94,7 @@ class PrepaidCard {
    * @return bool
    *   Whether the card is active.
    */
-  public function isActive() {
+  public function isActive(): boolean {
     return $this->active;
   }
 
@@ -102,7 +102,7 @@ class PrepaidCard {
    * @return float
    *   Amount loaded on this card (Assumption: this is a positive number.)
    */
-  public function amountLoaded() {
+  public function amountLoaded(): float {
     return $this->amountLoaded;
   }
 
@@ -112,7 +112,7 @@ class PrepaidCard {
    * @return float
    *   Balance available on this card.
    */
-  public function availableBalance() {
+  public function availableBalance(): float {
     return $this->amountLoaded() - $this->amountBlocked() - $this->amountRefunded;
   }
 
@@ -120,7 +120,7 @@ class PrepaidCard {
    * @return float
    *   Amount blocked/earmarked on this card.
    */
-  public function amountBlocked() {
+  public function amountBlocked(): float {
     $amount = 0.0;
     // Loop through earmarked (approved) authorization requests, sum amount available for capture on each of them.
     foreach ($this->earmarkedAuthorizationRequests as $request) {
@@ -141,7 +141,7 @@ class PrepaidCard {
    * @param float $amount
    *   Amount to load on the card (Assumption: we have already checked that this is a positive number.)
    */
-  public function loadMoney($amount) {
+  public function loadMoney(float $amount) {
     // Assumption: loading any positive amount on this card activates it.
     $this->active = TRUE;
     $this->amountLoaded += $amount;
@@ -166,12 +166,13 @@ class PrepaidCard {
   public function removeEarmarked(AuthorizationRequest $authorizationRequest) {
     unset($this->earmarkedAuthorizationRequests[$authorizationRequest->getId()]);
   }
+
   /**
    * TODO: split this out into its own service
    *
    * @param float $amount
    */
-  public function receiveRefund($amount) {
+  public function receiveRefund(float $amount) {
     // Assumption: we don't care about the merchant part of this transaction (we assume it's a different system)
     $this->amountRefunded += $amount;
   }
@@ -181,7 +182,7 @@ class PrepaidCard {
    *
    * @param float $amount
    */
-  public function capture($amount) {
+  public function capture(float $amount) {
     $this->amountLoaded -= $amount;
   }
 }
@@ -232,12 +233,12 @@ class AuthorizationRequest {
   /**
    * AuthorizationRequest constructor.
    *
-   * @param int $id
    * @param float $amount
+   * @param int $id
    * @param PrepaidCard $card
    * @param int $merchantId
    */
-  public function __construct($amount, $id, PrepaidCard $card, $merchantId) {
+  public function __construct(float $amount, int $id, PrepaidCard $card, int $merchantId) {
     $this->id = $id;
     $this->amountReversed = 0.00;
     $this->amountCaptured = 0.00;
@@ -275,7 +276,7 @@ class AuthorizationRequest {
    * @return float
    *   The amount that has been authorized for capture.
    */
-  public function getAuthorizedAmount() {
+  public function getAuthorizedAmount(): float {
     return $this->originalAmount - $this->amountReversed - $this->amountCaptured;
   }
 
@@ -283,7 +284,7 @@ class AuthorizationRequest {
    * @return int
    *   The ID.
    */
-  public function getId() {
+  public function getId(): int {
     return $this->id;
   }
 
@@ -293,14 +294,14 @@ class AuthorizationRequest {
    * @param float $amount
    *   Amount to capture.
    */
-  public function capture($amount) {
+  public function capture(float $amount) {
     $this->amountCaptured += $amount;
   }
 
   /**
    * @return int
    */
-  public function getMerchantId() {
+  public function getMerchantId(): int {
     return $this->merchantId;
   }
 }
@@ -339,7 +340,7 @@ class AuthorizationRequestHandler {
     // Check if user has enough money available on card to pay for amount on authorization request.
     // Assumption: it's enough to check if the available balance is no greater than the amount that has been authorized.
     if ($this->card->availableBalance() > $this->authorizationRequest->getAuthorizedAmount()) {
-      // Approve request
+      // Approve request.
       $this->authorizationRequest->approve();
       // Earmark the amount in the authorization request on the card.
       $this->card->earmark($this->authorizationRequest);
@@ -354,7 +355,7 @@ class AuthorizationRequestHandler {
    * @param int $amount
    *   (optional) amount to reverse. (again we assume valid inputs, i.e. amount <= transaction amount)
    */
-  public function reverse($amount = NULL) {
+  public function reverse(?int $amount = NULL) {
     if (!isset($amount)) {
       // Reverse full amount.
       $this->authorizationRequest->reverse($this->authorizationRequest->getAuthorizedAmount());
@@ -372,7 +373,7 @@ class AuthorizationRequestHandler {
    * @param float $amount
    *   Amount to capture.
    */
-  public function capture($amount) {
+  public function capture(float $amount) {
     $merchantId = $this->authorizationRequest->getMerchantId();
     $this->authorizationRequest->capture($amount);
     $this->card->capture($amount);
