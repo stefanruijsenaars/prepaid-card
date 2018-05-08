@@ -94,7 +94,7 @@ class PrepaidCard {
    * @return bool
    *   Whether the card is active.
    */
-  public function isActive(): boolean {
+  public function isActive(): bool {
     return $this->active;
   }
 
