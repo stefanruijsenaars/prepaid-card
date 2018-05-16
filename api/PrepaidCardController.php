@@ -1,71 +1,60 @@
 <?php
+
 class PrepaidCardController
 {
-    /**
-     * Returns a JSON string object to the browser when hitting the root of the domain
-     *
-     * @url GET /
-     */
-    public function test()
-    {
-        return "Hello World";
-    }
-
     /**
      * Creates a new card
      *
      * @url POST /card
      */
-    public function createNewCard()
+    public function createNewCard($data)
     {
-        $ownerId = $_POST['ownerId'];
-        $cardId = $_POST['cardId'];
         // validate input and log the user in
-        return "Hi!";
+	return $data->ownerId;
     }
 
     /**
-     * Gets the user by id or current user
+     * Loads money onto a card.
      *
-     * @url GET /users/$id
-     * @url GET /users/current
+     * @url POST /card/$cardId/load-money
      */
-    public function getUser($id = null)
+    public function loadMoney($cardId, $data)
     {
-        if ($id) {
-          return 'hi';
-        } else {
-            $user = $_SESSION['user'];
-        }
-
-        return $user; // serializes object into JSON
+	 $card = \PrepaidCard\PrepaidCard::load($cardId);
+	 if (!$card) {
+	     throw new \Jacwright\RestServer\RestException(404, "Card does not exist");
+	 }
+	 $card->loadMoney($data->amount);
     }
 
     /**
-     * Saves a user to the database
+     * Gets the balance of a card.
      *
-     * @url POST /users
-     * @url PUT /users/$id
+     * @url GET /card/$cardId/balance
      */
-    public function saveUser($id = null, $data)
+    public function getBalance($cardId)
     {
-        // ... validate $data properties such as $data->username, $data->firstName, etc.
-        $data->id = $id;
-        $user = User::saveUser($data); // saving the user to the database
-        return $user; // returning the updated or newly created user object
+	 $card = \PrepaidCard\PrepaidCard::load($cardId);
+	 if (!$card) {
+	     throw new \Jacwright\RestServer\RestException(404, "Card does not exist");
+	 }
+	 $out = new StdClass();
+	 $out->balance = $card->getBalance();
+	 return $out;
     }
 
     /**
-     * Gets user list
+     * Gets the blocked balance of a card.
      *
-     * @url GET /users
+     * @url GET /card/$cardId/blocked-balance
      */
-    public function listUsers($query)
+    public function getBlockedBalance($query)
     {
-        $users = array('Andra Combes', 'Valerie Shirkey', 'Manda Douse', 'Nobuko Fisch', 'Roger Hevey');
-        if (isset($query['search'])) {
-          $users = preg_grep("/$query[search]/i", $users);
-        }
-        return $users; // serializes object into JSON
+	 $card = \PrepaidCard\PrepaidCard::load($cardId);
+	 if (!$card) {
+	     throw new \Jacwright\RestServer\RestException(404, "Card does not exist");
+	 }
+	 $out = new StdClass();
+	 $out->blockedBalance = $card->getBlockedBalance();
     }
 }
