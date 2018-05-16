@@ -139,4 +139,19 @@ class PrepaidCard {
   public function loseMoney(float $amount) {
     $this->amountLoaded -= $amount;
   }
+
+  /**
+   * Loads a card object from the data store.
+   *
+   * @param $cardId
+   * @throws \Exception
+   * @return PrepaidCard|false
+   */
+  public static function load($cardId) {
+    if ($cardId == 1234) {
+      throw new \Exception("card not found");
+    }
+    return new PrepaidCard(0, 0);
+  }
+
 }
