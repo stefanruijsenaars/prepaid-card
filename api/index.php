@@ -1,7 +1,7 @@
 <?php
 
 require __DIR__ . '/vendor/jacwright/restserver/source/Jacwright/RestServer/RestServer.php';
-require 'TestController.php';
+require 'PrepaidCardController.php';
 
 $server = new \Jacwright\RestServer\RestServer('debug');
 $server->useCors = true;

@@ -1,5 +1,5 @@
 <?php
-class TestController
+class PrepaidCardController
 {
     /**
      * Returns a JSON string object to the browser when hitting the root of the domain
