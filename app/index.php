@@ -51,12 +51,6 @@ class PrepaidCard {
   protected $earmarkedAuthorizationRequests = [];
 
   /**
-   * @var bool
-   *   Whether the card is active.
-   */
-  protected $active;
-
-  /**
    * @var int
    *   ID of the person who owns the card. (Assumption: this is only one person.)
    */
@@ -83,19 +77,9 @@ class PrepaidCard {
   public function __construct(int $ownerId, int $cardId) {
     $this->cardId = $cardId;
     $this->ownerId = $ownerId;
-    // Assumption: card is always inactive when a card object is created.
-    $this->active = FALSE;
     // Assumption: amount loaded is always 0 when card object is created.
     $this->amountLoaded = 0.00;
     $this->amountRefunded = 0.00;
-  }
-
-  /**
-   * @return bool
-   *   Whether the card is active.
-   */
-  public function isActive(): bool {
-    return $this->active;
   }
 
   /**
@@ -142,8 +126,6 @@ class PrepaidCard {
    *   Amount to load on the card (Assumption: we have already checked that this is a positive number.)
    */
   public function loadMoney(float $amount) {
-    // Assumption: loading any positive amount on this card activates it.
-    $this->active = TRUE;
     $this->amountLoaded += $amount;
   }
 
