@@ -17,9 +17,9 @@ class AuthorizationRequest {
   protected $approved;
 
   /**
-   * @var int
+   * @var Merchant
    */
-  protected $merchantId;
+  protected $merchant;
 
   /**
    * @var PrepaidCard
@@ -101,12 +101,12 @@ class AuthorizationRequest {
   }
 
   /**
-   * Captures the given amount.
+   * Marks the given amount as captured.
    *
    * @param float $amount
    *   Amount to capture.
    */
-  public function capture(float $amount) {
+  public function markAsCaptured(float $amount) {
     $this->amountCaptured += $amount;
   }
 
@@ -115,5 +115,14 @@ class AuthorizationRequest {
    */
   public function getMerchantId(): int {
     return $this->merchant->id();
+  }
+
+  /**
+   * Sends the given amount to a merchant.
+   *
+   * @param float $amount
+   */
+  public function sendToMerchant(float $amount) {
+    $this->merchant->receive($amount);
   }
 }

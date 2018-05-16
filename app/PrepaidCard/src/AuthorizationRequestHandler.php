@@ -28,8 +28,10 @@ class AuthorizationRequestHandler {
 
   /**
    * Handles an authorization request (checks if user has enough money, then approves and earmarks the amount).
+   *
+   * @throws Exception
    */
-  public function handle() {
+  public function approveAndEarmark() {
     // Check if user has enough money available on card to pay for amount on authorization request.
     // Assumption: it's enough to check if the available balance is no greater than the amount that has been authorized.
     if ($this->card->availableBalance() > $this->authorizationRequest->getAuthorizedAmount()) {
@@ -38,17 +40,17 @@ class AuthorizationRequestHandler {
       // Earmark the amount in the authorization request on the card.
       $this->card->earmark($this->authorizationRequest);
     } else {
-      // TODO
+      throw new Exception("User does not have enough money available on their card.");
     }
   }
 
   /**
    * Assumption: the request has already been approved when we reverse it.
    *
-   * @param int $amount
+   * @param float $amount
    *   (optional) amount to reverse. (again we assume valid inputs, i.e. amount <= transaction amount)
    */
-  public function reverse(?int $amount = NULL) {
+  public function reverse(?float $amount = NULL) {
     if (!isset($amount)) {
       // Reverse full amount.
       $this->authorizationRequest->reverse($this->authorizationRequest->getAuthorizedAmount());
@@ -67,14 +69,13 @@ class AuthorizationRequestHandler {
    *   Amount to capture.
    */
   public function capture(float $amount) {
-    $merchantId = $this->authorizationRequest->getMerchantId();
-    $this->authorizationRequest->capture($amount);
-    $this->card->capture($amount);
-    // TODO: send money to merchant
-    echo("Sending $amount to merchant #$merchantId...");
-    // Clean up if necessary.
-    // if smaller than 1 cent, consider it to be zero.
-    define(EPSILON, 0.01);
+    // TODO: Find out what "the merchant can capture the amount multiple times" and "the merchant can’t capture more than we initially authorized him to." mean.
+    // I read this as the merchant being able to capture bits and pieces of the amount in the authorization request, but no more.
+    $this->authorizationRequest->markAsCaptured($amount);
+    $this->card->loseMoney($amount);
+    $this->authorizationRequest->sendToMerchant($amount);
+    define(EPSILON, 0.00001);
+    // Cleans up the relevant authorization request if it's zero.
     if ($this->authorizationRequest->getAuthorizedAmount() < EPSILON) {
       $this->card->removeEarmarked($this->authorizationRequest);
     }

@@ -23,7 +23,19 @@ class Merchant
     $this->balance = $balance;
   }
 
+  /**
+   * @return int
+   *   The ID of this merchant.
+   */
   public function id() {
     return $this->id;
+  }
+
+  /**
+   * @param $amount
+   *   The amount to receive.
+   */
+  public function receive($amount) {
+    $this->balance += amount;
   }
 }

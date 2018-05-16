@@ -21,7 +21,8 @@ class PrepaidCardTest extends \PHPUnit_Framework_TestCase {
 
   public function setUp() {
     $this->dataStore = new DataStore();
-    $this->card = new PrepaidCard($ownerId = $this->dataStore->getNextOwnerId(), $cardId = $this->dataStore->getNextCardId());}
+    $this->card = new PrepaidCard($ownerId = $this->dataStore->getNextOwnerId(), $cardId = $this->dataStore->getNextCardId());
+  }
 
   public function testLoadMoney() {
     $this->assertEquals(FALSE, $this->card->isActive());

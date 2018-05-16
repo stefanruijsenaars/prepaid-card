@@ -32,7 +32,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase {
 
     $authorizationRequest = new AuthorizationRequest(5.00, $this->dataStore->getNextAuthorizationRequestId(), $this->card, $this->dataStore->getNextMerchantId());
     $this->authorizationRequestHandler = new AuthorizationRequestHandler($authorizationRequest, $this->card);
-    $this->authorizationRequestHandler->handle();
+    $this->authorizationRequestHandler->approveAndEarmark();
     $this->assertEquals(6.00, $this->card->amountLoaded());
     $this->assertEquals(1.00, $this->card->availableBalance());
 

@@ -134,7 +134,7 @@ class PrepaidCard {
    *
    * @param float $amount
    */
-  public function capture(float $amount) {
+  public function loseMoney(float $amount) {
     $this->amountLoaded -= $amount;
   }
 }
