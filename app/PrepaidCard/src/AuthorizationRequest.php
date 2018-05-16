@@ -1,5 +1,7 @@
 <?php
 
+namespace PrepaidCard;
+
 /**
  * Models an authorization request (we assume this is the same as a "transaction" for purposes of the coding test)
  */

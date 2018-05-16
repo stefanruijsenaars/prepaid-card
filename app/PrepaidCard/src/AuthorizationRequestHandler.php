@@ -1,5 +1,7 @@
 <?php
 
+namespace PrepaidCard;
+
 /**
  * Approves/earmarks valid authorization requests and allows for capturing and reversing authorizations.
  */

@@ -1,5 +1,7 @@
 <?php
 
+namespace PrepaidCard;
+
 /**
  * Models data storage.
  *

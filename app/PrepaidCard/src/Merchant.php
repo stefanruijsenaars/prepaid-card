@@ -1,5 +1,7 @@
 <?php
 
+namespace PrepaidCard;
+
 /**
  * Models a merchant.
  */
@@ -18,7 +20,7 @@ class Merchant
    */
   protected $balance;
 
-  public function __construct(int $id, float $balance) {
+  public function __construct(int $id, float $balance = 0.00) {
     $this->id = $id;
     $this->balance = $balance;
   }
@@ -36,6 +38,6 @@ class Merchant
    *   The amount to receive.
    */
   public function receive($amount) {
-    $this->balance += amount;
+    $this->balance += $amount;
   }
 }

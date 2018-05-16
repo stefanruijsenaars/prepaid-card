@@ -1,6 +1,9 @@
 <?php
 
-require_once dirname(__FILE__) . '/../index.php';
+namespace PrepaidCard;
+
+require_once dirname(__FILE__) . '/../../index.php';
+
 
 class IntegrationTest extends \PHPUnit_Framework_TestCase {
 
@@ -20,7 +23,6 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase {
   protected $authorizationRequestHandler;
 
   public function setUp() {
-
     $this->dataStore = new DataStore();
     $this->card = new PrepaidCard($ownerId = $this->dataStore->getNextOwnerId(), $cardId = $this->dataStore->getNextCardId());
   }
@@ -30,7 +32,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase {
     $this->assertEquals(6.00, $this->card->amountLoaded());
     $this->assertEquals(6.00, $this->card->availableBalance());
 
-    $authorizationRequest = new AuthorizationRequest(5.00, $this->dataStore->getNextAuthorizationRequestId(), $this->card, $this->dataStore->getNextMerchantId());
+    $authorizationRequest = new AuthorizationRequest(5.00, $this->dataStore->getNextAuthorizationRequestId(), $this->card, new Merchant($this->dataStore->getNextMerchantId(), 0.00));
     $this->authorizationRequestHandler = new AuthorizationRequestHandler($authorizationRequest, $this->card);
     $this->authorizationRequestHandler->approveAndEarmark();
     $this->assertEquals(6.00, $this->card->amountLoaded());
