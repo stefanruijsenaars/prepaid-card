@@ -25,12 +25,10 @@
  *
  * TODO (and assumed to be out of scope for this coding test):
  * - create interfaces
- * - split out into separate files per PSR, add autoloading
  * - add input validation
  * - further unit test coverage
  */
 
-<?php
 /**
  * An example of a project-specific implementation.
  *

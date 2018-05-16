@@ -1,3 +1,4 @@
+<?php
 
 /**
  * Models an authorization request (we assume this is the same as a "transaction" for purposes of the coding test)
@@ -47,15 +48,15 @@ class AuthorizationRequest {
    * @param float $amount
    * @param int $id
    * @param PrepaidCard $card
-   * @param int $merchantId
+   * @param Merchant $merchant
    */
-  public function __construct(float $amount, int $id, PrepaidCard $card, int $merchantId) {
+  public function __construct(float $amount, int $id, PrepaidCard $card, Merchant $merchant) {
     $this->id = $id;
     $this->amountReversed = 0.00;
     $this->amountCaptured = 0.00;
     $this->originalAmount = $amount;
     $this->card = $card;
-    $this->merchantId = $merchantId;
+    $this->merchant = $merchant;
     // Assumption: all authorization requests are unapproved on object creation.
     $this->approved = FALSE;
   }
@@ -113,6 +114,6 @@ class AuthorizationRequest {
    * @return int
    */
   public function getMerchantId(): int {
-    return $this->merchantId;
+    return $this->merchant->id();
   }
 }

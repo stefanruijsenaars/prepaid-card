@@ -1,3 +1,5 @@
+<?php
+
 /**
  * Models data storage.
  *
