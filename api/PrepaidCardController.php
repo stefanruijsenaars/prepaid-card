@@ -12,16 +12,16 @@ class PrepaidCardController
     }
 
     /**
-     * Logs in a user with the given username and password POSTed. Though true
-     * REST doesn't believe in sessions, it is often desirable for an AJAX server.
+     * Creates a new card
      *
-     * @url POST /login
+     * @url POST /card
      */
-    public function login()
+    public function createNewCard()
     {
-        $username = $_POST['username'];
-        $password = $_POST['password'];
+        $ownerId = $_POST['ownerId'];
+        $cardId = $_POST['cardId'];
         // validate input and log the user in
+        return "Hi!";
     }
 
     /**
@@ -33,7 +33,7 @@ class PrepaidCardController
     public function getUser($id = null)
     {
         if ($id) {
-            $user = User::load($id); // possible user loading method
+          return 'hi';
         } else {
             $user = $_SESSION['user'];
         }
