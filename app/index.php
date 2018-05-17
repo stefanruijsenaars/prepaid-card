@@ -29,6 +29,8 @@
  * - further unit test coverage
  */
 
+require_once(__DIR__ . '/bootstrap.php');
+
 spl_autoload_register(function ($class) {
 
     // project-specific namespace prefix

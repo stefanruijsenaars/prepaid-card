@@ -2,7 +2,11 @@
 
 namespace PrepaidCard;
 
+use \Doctrine\ORM\Annotation as ORM;
+
 /**
+ * @ORM\Entity @ORM\Table(name="prepaid_cards")
+ *
  * Models a prepaid card.
  *
  * Assumption: one card always has one owner.
@@ -10,6 +14,8 @@ namespace PrepaidCard;
 class PrepaidCard {
 
   /**
+   * @ORM\Id @ORM\Column(type="integer") @ORM\GeneratedValue
+   *
    * @var int
    *   ID for this card
    */

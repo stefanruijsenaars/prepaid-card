@@ -2,17 +2,16 @@
 
 require_once("../app/index.php");
 
-class PrepaidCardController
-{
+class PrepaidCardController {
+
     /**
      * Creates a new card
      *
      * @url POST /card
      */
-    public function createNewCard($data)
-    {
+    public function createNewCard($data) {
         // validate input and log the user in
-	return $data->ownerId;
+	      return $data->ownerId;
     }
 
     /**
@@ -20,13 +19,12 @@ class PrepaidCardController
      *
      * @url POST /card/$cardId/load-money
      */
-    public function loadMoney($cardId, $data)
-    {
-	 $card = \PrepaidCard\PrepaidCard::load($cardId);
-	 if (!$card) {
-	     throw new \Jacwright\RestServer\RestException(404, "Card does not exist");
-	 }
-	 $card->loadMoney($data->amount);
+    public function loadMoney($cardId, $data) {
+       $card = \PrepaidCard\PrepaidCard::load($cardId);
+       if (!$card) {
+           throw new \Jacwright\RestServer\RestException(404, "Card does not exist");
+       }
+       $card->loadMoney($data->amount);
     }
 
     /**
@@ -34,15 +32,14 @@ class PrepaidCardController
      *
      * @url GET /card/$cardId/balance
      */
-    public function getBalance($cardId)
-    {
-	 $card = \PrepaidCard\PrepaidCard::load($cardId);
-	 if (!$card) {
-	     throw new \Jacwright\RestServer\RestException(404, "Card does not exist");
-	 }
-	 $out = new StdClass();
-	 $out->balance = $card->getBalance();
-	 return $out;
+    public function getBalance($cardId) {
+       $card = \PrepaidCard\PrepaidCard::load($cardId);
+       if (!$card) {
+           throw new \Jacwright\RestServer\RestException(404, "Card does not exist");
+       }
+       $out = new StdClass();
+       $out->balance = $card->getBalance();
+       return $out;
     }
 
     /**
@@ -50,13 +47,12 @@ class PrepaidCardController
      *
      * @url GET /card/$cardId/blocked-balance
      */
-    public function getBlockedBalance($query)
-    {
-	 $card = \PrepaidCard\PrepaidCard::load($cardId);
-	 if (!$card) {
-	     throw new \Jacwright\RestServer\RestException(404, "Card does not exist");
-	 }
-	 $out = new StdClass();
-	 $out->blockedBalance = $card->getBlockedBalance();
+    public function getBlockedBalance($query) {
+       $card = \PrepaidCard\PrepaidCard::load($cardId);
+       if (!$card) {
+           throw new \Jacwright\RestServer\RestException(404, "Card does not exist");
+       }
+       $out = new StdClass();
+       $out->blockedBalance = $card->getBlockedBalance();
     }
 }
